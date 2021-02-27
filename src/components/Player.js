@@ -1,7 +1,6 @@
-import React, {useRef, useState, useEffect} from 'react';
+import React from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faPlay, faAngleLeft, faAlignRight, faAngleRight, faPause} from "@fortawesome/free-solid-svg-icons";
-import Song from './Song';
+import {faPlay, faAngleLeft, faAngleRight, faPause} from "@fortawesome/free-solid-svg-icons";
 import {playAudio} from '../util';
 
 const Player = ({currentSong, setIsPlaying, isPlaying, audioRef, setSongInfo, songInfo, songs, setcurrentSong, setsongs}) => {
@@ -11,9 +10,10 @@ const Player = ({currentSong, setIsPlaying, isPlaying, audioRef, setSongInfo, so
     //in react, we use something called a refrence
 
     //useEffect
-    useEffect(() => {
+const activelibraryHandler = (nextPrev) => {
+    
         const newSongs = songs.map((song) => {
-            if(song.id === currentSong.id){
+            if(song.id === nextPrev.id){
                 return{
                     ...song, active: true,
                 }
@@ -24,7 +24,8 @@ const Player = ({currentSong, setIsPlaying, isPlaying, audioRef, setSongInfo, so
             }
         });
         setsongs(newSongs);
-    }, [currentSong]);
+    };
+
 
 
     //event handler
@@ -56,10 +57,12 @@ const Player = ({currentSong, setIsPlaying, isPlaying, audioRef, setSongInfo, so
             let currentIndex = songs.findIndex(song => song.id === currentSong.id);
             if (direction === 'skip-forward') {
                 setcurrentSong(songs[currentIndex + 1] || songs[0]);
+                activelibraryHandler(songs[currentIndex + 1] || songs[0]);
                 playAudio(isPlaying, audioRef);
                 return;
             } else if (direction === 'skip-back') {
                 setcurrentSong(songs[currentIndex - 1] || songs[songs.length -1]);
+                activelibraryHandler(songs[currentIndex - 1] || songs[songs.length -1]);
             }
             playAudio(isPlaying, audioRef);
         };
